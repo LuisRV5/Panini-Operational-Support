@@ -90,7 +90,7 @@ fun FeatureFlagsPanel(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Text("⚙️ Feature Flags (Testing)", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            Text("⚙️ Feature Flags", fontWeight = FontWeight.Bold, fontSize = 14.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = uiState.isTicketCreationEnabled, onCheckedChange = { onToggleCreation() })
                 Text("Permitir Crear Tickets", fontSize = 14.sp)

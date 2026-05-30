@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class TicketViewModel(
-    private val repository: TicketRepository = TicketRepository() // Instancia por defecto por simplicidad de la PoC
+    private val repository: TicketRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TicketUiState(isLoading = true))

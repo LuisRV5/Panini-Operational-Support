@@ -9,7 +9,7 @@ Se adoptó **Model-View-ViewModel (MVVM)** para garantizar la separación de res
 - **Repository:** Centraliza los datos y actúa como única fuente de la verdad (Single Source of Truth).
 
 ## 2. Naming y Terminología en Inglés
-Todo el código fuente (clases, funciones, variables) y la estructura de directorios fue nombrada estrictamente en **inglés técnico** (ej. `TicketViewModel`, `updateTicketPriority`, `MockEngine`) respetando el estándar internacional de la industria del software. Únicamente los textos y etiquetas (Strings) dirigidos al usuario final están en español, manteniendo el código universal.
+Todo el código fuente (clases, funciones, variables) y la estructura de directorios fue nombrada estrictamente en **inglés técnico** (ej. `TicketViewModel`, `updateTicketPriority`, `MockEngine`) respetando el estándar internacional de la industria del software. Únicamente los textos y etiquetas (Strings) dirigidos al usuario final están en español.
 
 ## 3. Modularidad y Organización de Paquetes
 Se aplicó un enfoque de *Package by Layer / Feature* altamente modular:

@@ -10,10 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.panini.data.repository.AuthRepository
+import com.example.panini.data.repository.TicketRepository
 import com.example.panini.ui.screens.AuthViewModel
 import com.example.panini.ui.screens.CreateTicketScreen
 import com.example.panini.ui.screens.LoginScreen
@@ -32,8 +36,26 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val authViewModel: AuthViewModel = viewModel()
-                    val ticketViewModel: TicketViewModel = viewModel()
+                    
+                    // Inyección de dependencias manual (Manual DI)
+                    val authRepository = AuthRepository()
+                    val ticketRepository = TicketRepository()
+
+                    val factory = object : ViewModelProvider.Factory {
+                        @Suppress("UNCHECKED_CAST")
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+                                return AuthViewModel(authRepository) as T
+                            }
+                            if (modelClass.isAssignableFrom(TicketViewModel::class.java)) {
+                                return TicketViewModel(ticketRepository) as T
+                            }
+                            throw IllegalArgumentException("Unknown ViewModel class")
+                        }
+                    }
+
+                    val authViewModel: AuthViewModel = viewModel(factory = factory)
+                    val ticketViewModel: TicketViewModel = viewModel(factory = factory)
 
                     NavHost(navController = navController, startDestination = "login") {
                         composable("login") {
