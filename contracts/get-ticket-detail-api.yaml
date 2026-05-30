@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: Panini Support - Get Ticket Detail API
+  version: 1.0.0
+  description: Contrato de API para obtener el detalle completo de un ticket específico.
+servers:
+  - url: https://api.paninisupport.com/v1
+paths:
+  /tickets/{id}:
+    get:
+      summary: Obtener detalle del ticket
+      description: Retorna toda la información ampliada de un ticket por su ID.
+      operationId: getTicketDetail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del ticket.
+          schema:
+            type: string
+            example: "TCK-1045"
+      responses:
+        '200':
+          description: Detalle del ticket recuperado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketDetail'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ticket no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TicketDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "TCK-1045"
+        title:
+          type: string
+          example: "Faltante de inventario en Distribuidora Central"
+        description:
+          type: string
+          example: "El pedido #8920 llegó incompleto. Faltan 5 cajas de álbumes tapa dura."
+        priority:
+          type: string
+          enum: [HIGH, MEDIUM, LOW]
+          example: "HIGH"
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+          example: "OPEN"
+        provider:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "PRV-050"
+            name:
+              type: string
+              example: "Distribuidora Central SJ"
+            contactEmail:
+              type: string
+              example: "contacto@distribuidorasj.com"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-05-30T08:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-05-30T08:30:00Z"
+        category:
+          type: string
+          example: "INVENTORY_SHORTAGE"
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "TCK_404"
+        message:
+          type: string
+          example: "El ticket solicitado no existe."

@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: Panini Support - Get Tickets API
+  version: 1.0.0
+  description: Contrato de API para obtener el listado de tickets de soporte técnico e incidencias.
+servers:
+  - url: https://api.paninisupport.com/v1
+paths:
+  /tickets:
+    get:
+      summary: Obtener listado de tickets
+      description: Retorna una lista de todos los tickets. Soporta paginación básica.
+      operationId: getTickets
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Listado de tickets recuperado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketSummary'
+        '401':
+          description: No autorizado (Token inválido o expirado).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TicketSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "TCK-1045"
+        title:
+          type: string
+          example: "Faltante de inventario en Distribuidora Central"
+        priority:
+          type: string
+          enum: [HIGH, MEDIUM, LOW]
+          example: "HIGH"
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+          example: "OPEN"
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "SYS_001"
+        message:
+          type: string
+          example: "Error interno procesando la solicitud."

@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: Panini Support - Update Ticket Priority API
+  version: 1.0.0
+  description: Contrato de API para actualizar la prioridad de un ticket.
+servers:
+  - url: https://api.paninisupport.com/v1
+paths:
+  /tickets/{id}/priority:
+    patch:
+      summary: Actualizar prioridad del ticket
+      description: Permite cambiar la prioridad de un ticket específico. Esto debería desencadenar un reordenamiento reactivo en la UI.
+      operationId: updateTicketPriority
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del ticket.
+          schema:
+            type: string
+            example: "TCK-1045"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePriorityRequest'
+      responses:
+        '200':
+          description: Prioridad actualizada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Prioridad no válida.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ticket no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UpdatePriorityRequest:
+      type: object
+      required:
+        - priority
+      properties:
+        priority:
+          type: string
+          enum: [HIGH, MEDIUM, LOW]
+          example: "HIGH"
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Prioridad actualizada a HIGH."
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "TCK_400"
+        message:
+          type: string
+          example: "La prioridad proporcionada no es válida."
