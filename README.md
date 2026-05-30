@@ -40,6 +40,32 @@ Se ha implementado un sistema básico de *Feature Flags* para demostrar adaptabi
 
 Ambos *flags* pueden activarse/desactivarse en tiempo real desde el panel superior del listado de tickets.
 
+## 🧪 Guía de Pruebas y Flujos
+
+Para validar el funcionamiento del sistema, sigue esta secuencia de pruebas recomendada:
+
+### 1. Autenticación (Login)
+- La aplicación arranca en el `LoginScreen`.
+- **Validación:** Si intentas ingresar sin datos, el sistema requerirá que completes los campos obligatorios.
+- **Credenciales Mock:** Utiliza el correo **`admin@panini.com`** y la contraseña **`admin`**.
+- Al iniciar sesión exitosamente, serás redirigido al listado de tickets. La navegación elimina el login del historial, impidiendo volver atrás.
+
+### 2. Listado y Feature Flags
+- La pantalla `TicketListScreen` muestra los tickets precargados mediante el `MockEngine` del repositorio, ordenados automáticamente por prioridad (HIGH primero).
+- **Prueba de Feature Flags:** En la parte superior encontrarás un panel. Apaga el check de "Permitir Crear Tickets" y notarás cómo el botón flotante (FAB) desaparece en tiempo real.
+
+### 3. Creación de Incidencias
+- Con la flag activa, presiona el FAB (+) para abrir `CreateTicketScreen`.
+- Ingresa datos de prueba y selecciona la prioridad y categoría.
+- Al guardar, la app regresa al listado y el nuevo ticket aparecerá automáticamente sin necesidad de refrescar la pantalla (gracias a StateFlow).
+
+### 4. Detalles y Actualización Reactiva
+- Toca cualquier ticket para abrir `TicketDetailScreen`.
+- Modifica el **Estado** (ej. de OPEN a IN_PROGRESS).
+- Cambia la **Prioridad** (ej. de LOW a HIGH). 
+- **Prueba:** Vuelve al listado y comprueba cómo el ticket escaló automáticamente a las primeras posiciones.
+- Si apagas el Feature Flag "Permitir Cambiar Prioridad" desde el listado, los botones de prioridad en el detalle se bloquearán de inmediato.
+
 ## ▶️ Ejecución del Proyecto
 1. Abre Android Studio.
 2. Selecciona **Open** y navega hasta la carpeta raíz del repositorio o directamente a la carpeta `/app`.
