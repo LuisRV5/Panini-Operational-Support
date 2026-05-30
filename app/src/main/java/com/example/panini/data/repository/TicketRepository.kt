@@ -48,10 +48,6 @@ class TicketRepository {
     private val _ticketsFlow = MutableStateFlow(mockTickets.toList())
     val ticketsFlow: StateFlow<List<Ticket>> = _ticketsFlow.asStateFlow()
 
-    fun getTicketsFlow(): StateFlow<List<Ticket>> {
-        return ticketsFlow
-    }
-
     fun getTicketById(id: String): Ticket? {
         return mockTickets.find { it.id == id }
     }

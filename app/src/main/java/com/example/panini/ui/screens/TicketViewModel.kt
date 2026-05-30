@@ -22,7 +22,7 @@ class TicketViewModel(
     init {
         // Escucha activa del repositorio (Estrategia Basada en Eventos)
         viewModelScope.launch {
-            repository.getTicketsFlow().collectLatest { ticketList ->
+            repository.ticketsFlow.collectLatest { ticketList ->
                 // Actualiza y ordena la lista automáticamente cada vez que el repo emite
                 val sortedList = ticketList.sortedBy { it.priority } // HIGH(0), MEDIUM(1), LOW(2)
                 _uiState.value = _uiState.value.copy(
