@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: Panini Support - Create Ticket API
+  version: 1.0.0
+  description: Contrato de API para la creación de un nuevo ticket de soporte.
+servers:
+  - url: https://api.paninisupport.com/v1
+paths:
+  /tickets:
+    post:
+      summary: Crear un nuevo ticket
+      description: Permite registrar una nueva incidencia en el sistema.
+      operationId: createTicket
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketRequest'
+      responses:
+        '201':
+          description: Ticket creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketCreatedResponse'
+        '400':
+          description: Datos de entrada inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateTicketRequest:
+      type: object
+      required:
+        - title
+        - description
+        - priority
+        - providerId
+        - category
+      properties:
+        title:
+          type: string
+          example: "Error en lote de sobres"
+        description:
+          type: string
+          example: "El lote #2049 vino con sobres mal sellados."
+        priority:
+          type: string
+          enum: [HIGH, MEDIUM, LOW]
+          example: "MEDIUM"
+        providerId:
+          type: string
+          example: "PRV-012"
+        category:
+          type: string
+          enum: [INVENTORY_SHORTAGE, LOGISTICS_ERROR, QUALITY_ISSUE, OTHER]
+          example: "QUALITY_ISSUE"
+
+    TicketCreatedResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "TCK-1046"
+        status:
+          type: string
+          example: "OPEN"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-05-30T09:15:00Z"
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "VAL_001"
+        message:
+          type: string
+          example: "Faltan campos requeridos en la solicitud."

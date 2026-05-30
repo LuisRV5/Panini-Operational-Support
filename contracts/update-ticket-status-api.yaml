@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: Panini Support - Update Ticket Status API
+  version: 1.0.0
+  description: Contrato de API para actualizar únicamente el estado de un ticket.
+servers:
+  - url: https://api.paninisupport.com/v1
+paths:
+  /tickets/{id}/status:
+    patch:
+      summary: Actualizar estado del ticket
+      description: Permite cambiar el estado de un ticket específico.
+      operationId: updateTicketStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del ticket.
+          schema:
+            type: string
+            example: "TCK-1045"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusRequest'
+      responses:
+        '200':
+          description: Estado actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Transición de estado no válida.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ticket no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UpdateStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+          example: "IN_PROGRESS"
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Estado actualizado a IN_PROGRESS."
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "TCK_400"
+        message:
+          type: string
+          example: "El estado proporcionado no es válido."

@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Panini Support - Auth Login API
+  version: 1.0.0
+  description: Contrato de API para la autenticación de usuarios (operadores de soporte).
+servers:
+  - url: https://api.paninisupport.com/v1
+paths:
+  /auth/login:
+    post:
+      summary: Autenticar usuario
+      description: Permite a un operador iniciar sesión en la plataforma de soporte.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login exitoso. Retorna token de sesión e información básica del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Datos de entrada inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credenciales incorrectas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: operador1@paninisupport.com
+        password:
+          type: string
+          format: password
+          example: "Panini2026!"
+    
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "USR-001"
+            name:
+              type: string
+              example: "Carlos López"
+            role:
+              type: string
+              example: "SUPPORT_OPERATOR"
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "AUTH_001"
+        message:
+          type: string
+          example: "Credenciales inválidas."
