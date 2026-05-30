@@ -66,7 +66,11 @@ fun CreateTicketScreen(
             )
 
             Text("Prioridad", fontWeight = FontWeight.Bold)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            @OptIn(ExperimentalLayoutApi::class)
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 TicketPriority.values().forEach { p ->
                     FilterChip(
                         selected = priority == p,
@@ -77,7 +81,11 @@ fun CreateTicketScreen(
             }
 
             Text("Categoría", fontWeight = FontWeight.Bold)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            @OptIn(ExperimentalLayoutApi::class)
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 TicketCategory.values().forEach { c ->
                     FilterChip(
                         selected = category == c,

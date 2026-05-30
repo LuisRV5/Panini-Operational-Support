@@ -71,7 +71,11 @@ fun TicketDetailScreen(
 
                 // Actualizar Estado
                 Text(text = "Estado del Ticket", fontWeight = FontWeight.Bold)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                @OptIn(ExperimentalLayoutApi::class)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     TicketStatus.values().forEach { status ->
                         FilterChip(
                             selected = ticket.status == status,
@@ -83,7 +87,11 @@ fun TicketDetailScreen(
 
                 // Feature Flag: Actualizar Prioridad
                 Text(text = "Prioridad (Reordena la lista principal)", fontWeight = FontWeight.Bold)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                @OptIn(ExperimentalLayoutApi::class)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     TicketPriority.values().forEach { priority ->
                         FilterChip(
                             selected = ticket.priority == priority,

@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.panini.ui.screens.AuthViewModel
 import com.example.panini.ui.screens.CreateTicketScreen
 import com.example.panini.ui.screens.LoginScreen
 import com.example.panini.ui.screens.TicketDetailScreen
@@ -31,12 +32,13 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    // Instancia compartida del ViewModel para mantener el mismo flujo reactivo en toda la PoC
+                    val authViewModel: AuthViewModel = viewModel()
                     val ticketViewModel: TicketViewModel = viewModel()
 
                     NavHost(navController = navController, startDestination = "login") {
                         composable("login") {
                             LoginScreen(
+                                viewModel = authViewModel,
                                 onLoginSuccess = {
                                     navController.navigate("tickets") {
                                         popUpTo("login") { inclusive = true }
