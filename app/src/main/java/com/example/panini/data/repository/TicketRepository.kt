@@ -1,5 +1,9 @@
 package com.example.panini.data.repository
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 import com.example.panini.domain.model.Ticket
 import com.example.panini.domain.model.TicketCategory
 import com.example.panini.domain.model.TicketPriority
@@ -41,8 +45,11 @@ class TicketRepository {
         )
     )
 
-    fun getTickets(): List<Ticket> {
-        return mockTickets.toList()
+    private val _ticketsFlow = MutableStateFlow(mockTickets.toList())
+    val ticketsFlow: StateFlow<List<Ticket>> = _ticketsFlow.asStateFlow()
+
+    fun getTicketsFlow(): StateFlow<List<Ticket>> {
+        return ticketsFlow
     }
 
     fun getTicketById(id: String): Ticket? {
@@ -56,12 +63,12 @@ class TicketRepository {
             description = description,
             priority = priority,
             status = TicketStatus.OPEN,
-            providerName = "Proveedor Simulado ($providerId)", // Simulación
+            providerName = "Proveedor Simulado ($providerId)",
             createdAt = "2026-05-30T10:00:00Z",
             category = category
         )
-        // Se añade al principio simulando el orden de creación más reciente, o la VM se encarga de reordenar por prioridad
         mockTickets.add(newTicket)
+        _ticketsFlow.value = mockTickets.toList()
         return newTicket
     }
 
@@ -69,6 +76,7 @@ class TicketRepository {
         val index = mockTickets.indexOfFirst { it.id == id }
         if (index != -1) {
             mockTickets[index] = mockTickets[index].copy(status = newStatus)
+            _ticketsFlow.value = mockTickets.toList()
             return true
         }
         return false
@@ -78,6 +86,7 @@ class TicketRepository {
         val index = mockTickets.indexOfFirst { it.id == id }
         if (index != -1) {
             mockTickets[index] = mockTickets[index].copy(priority = newPriority)
+            _ticketsFlow.value = mockTickets.toList()
             return true
         }
         return false
